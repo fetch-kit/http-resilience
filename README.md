@@ -8,7 +8,7 @@ npm run check
 npm run report
 ```
 
-Open `results/matrix.html` for the matrix, configurations, exact expected errors, assertion failures, and failure traces. Markdown and JSON are written alongside it. Failed correctness assertions still generate the report and make the command exit nonzero.
+Open `results/matrix.html` for the matrix, configurations, exact expected errors, assertion failures, and failure traces. Markdown and JSON are written alongside it. Failed correctness assertions still generate the report and make the command exit nonzero. The latest matrix is published at <https://fetchkit.org/http-resilience/> by `.github/workflows/report-pages.yml`, which regenerates it weekly and whenever the pinned dependencies change.
 
 PASS/FAIL come from executed assertions. N/A identifies an unavailable combination and links to its reason. NOT TESTED means no implementation; NOT RUN means a registered test was absent from the run. Harness/reporter tests are excluded.
 
@@ -18,19 +18,19 @@ Cancellation cases require prompt settlement, no dispatch after cancellation, an
 
 ## Libraries under test
 
-| Library
-| ---
-| [ffetch](https://github.com/fetch-kit/ffetch)
-| [ky](https://github.com/sindresorhus/ky) 
-| [fetch-retry](https://github.com/jonbern/fetch-retry)
-| [ofetch](https://github.com/unjs/ofetch)
-| [wretch](https://github.com/elbywan/wretch)
-| [resilient-fetch-client](https://github.com/cnoelle/resilient-fetch-client)
-| [fetch-smartly](https://github.com/Ali-Raza-Arain/fetch-smartly)
-| [@resili/fetch](https://github.com/nkcodedev/resili)
-| [fetch-resilience](https://github.com/mstuart/fetch-resilience)
-| [flowshield](https://www.npmjs.com/package/flowshield)
-| [ts-retry-circuit](https://www.npmjs.com/package/ts-retry-circuit)
+| Library |
+| --- |
+| [ffetch](https://github.com/fetch-kit/ffetch) |
+| [ky](https://github.com/sindresorhus/ky)  |
+| [fetch-retry](https://github.com/jonbern/fetch-retry) |
+| [ofetch](https://github.com/unjs/ofetch) |
+| [wretch](https://github.com/elbywan/wretch) |
+| [resilient-fetch-client](https://github.com/cnoelle/resilient-fetch-client) |
+| [fetch-smartly](https://github.com/Ali-Raza-Arain/fetch-smartly) |
+| [@resili/fetch](https://github.com/nkcodedev/resili) |
+| [fetch-resilience](https://github.com/mstuart/fetch-resilience) |
+| [flowshield](https://www.npmjs.com/package/flowshield) |
+| [ts-retry-circuit](https://www.npmjs.com/package/ts-retry-circuit) |
 
 flowshield and ts-retry-circuit no longer publish a public GitHub repository, so they link to their npm pages.
 
