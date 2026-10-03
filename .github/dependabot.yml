@@ -1,0 +1,48 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 10
+    groups:
+      # The resilience libraries/adapters exercised by this repo's test matrix.
+      # Kept in one group so they can be bumped and reviewed together, but
+      # majors are excluded so breaking changes arrive as individual PRs.
+      resilience-libraries:
+        patterns:
+          - "@fetchkit/ffetch"
+          - "@resili/*"
+          - "ky"
+          - "fetch-retry"
+          - "ofetch"
+          - "wretch"
+          - "resilient-fetch-client"
+          - "fetch-smartly"
+          - "fetch-resilience"
+          - "flowshield"
+          - "ts-retry-circuit"
+          - "cockatiel"
+        update-types:
+          - "minor"
+          - "patch"
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
