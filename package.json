@@ -1,0 +1,36 @@
+{
+  "name": "fetch-resiliency",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Correctness tests for fetch resilience libraries",
+  "type": "module",
+  "engines": {
+    "node": "^24.0.0 || >=26.0.0"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:conformance": "vitest run test/conformance",
+    "test:integration": "vitest run test/integration",
+    "report": "node scripts/report.ts"
+  },
+  "devDependencies": {
+    "@fetchkit/ffetch": "5.7.1",
+    "@resili/core": "0.2.0-beta.1",
+    "@resili/fetch": "0.2.0-beta.1",
+    "@types/node": "24.2.0",
+    "cockatiel": "3.2.1",
+    "fetch-resilience": "0.1.0",
+    "fetch-retry": "6.0.0",
+    "fetch-smartly": "1.0.2",
+    "flowshield": "1.0.4",
+    "ky": "2.1.0",
+    "ofetch": "1.5.1",
+    "resilient-fetch-client": "0.3.0",
+    "ts-retry-circuit": "2.1.1",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3",
+    "wretch": "3.0.9"
+  }
+}

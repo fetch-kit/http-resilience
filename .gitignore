@@ -1,0 +1,7 @@
+node_modules/
+results/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
