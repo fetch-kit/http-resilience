@@ -18,19 +18,19 @@ Cancellation cases require prompt settlement, no dispatch after cancellation, an
 
 ## Libraries under test
 
-| Library | Version |
-| --- | --- |
-| [ffetch](https://github.com/fetch-kit/ffetch) | 5.7.1 |
-| [ky](https://github.com/sindresorhus/ky) | 2.1.0 |
-| [fetch-retry](https://github.com/jonbern/fetch-retry) | 6.0.0 |
-| [ofetch](https://github.com/unjs/ofetch) | 1.5.1 |
-| [wretch](https://github.com/elbywan/wretch) | 3.0.9 |
-| [resilient-fetch-client](https://github.com/cnoelle/resilient-fetch-client) | 0.3.0 |
-| [fetch-smartly](https://github.com/Ali-Raza-Arain/fetch-smartly) | 1.0.2 |
-| [@resili/fetch](https://github.com/nkcodedev/resili) | 0.2.0-beta.1 |
-| [fetch-resilience](https://github.com/mstuart/fetch-resilience) | 0.1.0 |
-| [flowshield](https://www.npmjs.com/package/flowshield) | 1.0.4 |
-| [ts-retry-circuit](https://www.npmjs.com/package/ts-retry-circuit) | 2.1.1 |
+| Library
+| ---
+| [ffetch](https://github.com/fetch-kit/ffetch)
+| [ky](https://github.com/sindresorhus/ky) 
+| [fetch-retry](https://github.com/jonbern/fetch-retry)
+| [ofetch](https://github.com/unjs/ofetch)
+| [wretch](https://github.com/elbywan/wretch)
+| [resilient-fetch-client](https://github.com/cnoelle/resilient-fetch-client)
+| [fetch-smartly](https://github.com/Ali-Raza-Arain/fetch-smartly)
+| [@resili/fetch](https://github.com/nkcodedev/resili)
+| [fetch-resilience](https://github.com/mstuart/fetch-resilience)
+| [flowshield](https://www.npmjs.com/package/flowshield)
+| [ts-retry-circuit](https://www.npmjs.com/package/ts-retry-circuit)
 
 flowshield and ts-retry-circuit no longer publish a public GitHub repository, so they link to their npm pages.
 
