@@ -11,7 +11,7 @@ name: Publish correctness matrix
 
 on:
   schedule:
-    - cron: '0 6 * 1 *' # Mondays, after the weekly Dependabot bumps land
+    - cron: '0 6 * * 1' # Mondays, after the weekly Dependabot bumps land
   workflow_dispatch:
   push:
     branches: [main]
@@ -44,7 +44,7 @@ jobs:
       - run: npm ci
       - run: npm run check
       - name: Generate the matrix
-        run: npm run report || echo "report exited nonzero: failing assertions are the matrix's data"
+        run: 'npm run report || echo "report exited nonzero, as designed: failing assertions are the matrix data"'
       - name: Refuse to publish an incomplete matrix
         shell: bash
         run: |
