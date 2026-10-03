@@ -1,6 +1,6 @@
-# Fetch resiliency
+# HTTP Resilience
 
-Correctness matrix for 11 pinned libraries across 21 scenarios. Requires Node.js 24.
+Correctness matrix for 11 pinned libraries across 21 scenarios.
 
 ```sh
 npm ci
