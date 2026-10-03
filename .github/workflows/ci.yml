@@ -1,0 +1,22 @@
+name: CI
+
+# Type-check only. `npm test` and `npm run report` are deliberately *not* run
+# here: failing conformance assertions are the point of this repo (they are the
+# matrix's PASS/FAIL data and make the report command exit nonzero), so they
+# are not a gate.
+
+on: [push, pull_request]
+
+permissions: read-all
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run check

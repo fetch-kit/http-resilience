@@ -37,18 +37,12 @@ updates:
           - "vitest"
           - "@vitest/*"
 
-# No `github-actions` ecosystem entry yet: this repo has no workflow files, and
-# Dependabot fails the update job with `dependency_file_not_found`
-# ("/action.yml or /.github/workflows/<anything>.yml not found") when the
-# ecosystem is enabled without one. Add it back, using the same shape as the
-# npm entry above, once `.github/workflows/` exists.
-#
-#   - package-ecosystem: github-actions
-#     directory: /
-#     schedule:
-#       interval: weekly
-#     open-pull-requests-limit: 5
-#     groups:
-#       github-actions:
-#         patterns:
-#           - "*"
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
