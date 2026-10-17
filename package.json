@@ -25,7 +25,7 @@
     "fetch-retry": "6.0.0",
     "fetch-smartly": "1.0.2",
     "flowshield": "1.0.4",
-    "ky": "2.1.0",
+    "ky": "2.2.0",
     "ofetch": "1.5.1",
     "resilient-fetch-client": "0.3.0",
     "ts-retry-circuit": "2.1.1",
