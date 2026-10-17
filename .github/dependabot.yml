@@ -7,6 +7,14 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 10
+    ignore:
+      # cockatiel is only consumed through resilient-fetch-client (cockatiel ^3.2.1).
+      # A major bump installs a second copy, so the error classes the contracts
+      # assert on (TaskCancelledError, BrokenCircuitError) are no longer the same
+      # objects as the ones the library throws.
+      - dependency-name: "cockatiel"
+        update-types:
+          - "version-update:semver-major"
     groups:
       # The resilience libraries/adapters exercised by this repo's test matrix.
       # Kept in one group so they can be bumped and reviewed together, but
