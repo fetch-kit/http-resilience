@@ -30,7 +30,7 @@
     "resilient-fetch-client": "0.3.0",
     "ts-retry-circuit": "2.1.1",
     "typescript": "7.0.2",
-    "vitest": "5.0.3",
+    "vitest": "5.0.5",
     "wretch": "3.0.9"
   }
 }
