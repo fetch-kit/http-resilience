@@ -44,3 +44,19 @@ export const deadlineAdapters: RetryAdapter[] = [
     }));
   } },
 ];
+
+// reqkit's deadline is its own totalDeadlineMs option (covers in-flight attempts,
+// backoff and Retry-After waits alike) — the scenario's 100ms deadline maps to it.
+import { createFetch as reqkitCreateFetch } from "@boy-offi9-inc/reqkit";
+deadlineAdapters.push({
+  name: "reqkit",
+  create(fetch, { delayMs }) {
+    const client = reqkitCreateFetch({
+      fetch,
+      retry: { retries: 1, baseDelayMs: delayMs, maxDelayMs: delayMs, factor: 1, jitter: 0,
+        totalDeadlineMs: 100, retryStatusCodes: [503] },
+      timeout: false,
+    });
+    return (input, init) => client(input instanceof URL ? input.toString() : String(input), init ?? {});
+  },
+});

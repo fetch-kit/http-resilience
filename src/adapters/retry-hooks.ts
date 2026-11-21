@@ -8,6 +8,7 @@ import { createFetch as createResiliFetch } from "@resili/fetch";
 import * as flow from "flowshield";
 import { CircuitBreaker, createCircuitFetch } from "ts-retry-circuit";
 import { createFfetchClient } from "./ffetch.js";
+import { createFetch as reqkitFetch } from "@boy-offi9-inc/reqkit";
 import { HttpStatusError } from "./competitors.js";
 import type { FetchImplementation, RequestClient } from "./types.js";
 export const hookProfiles = [
@@ -20,6 +21,7 @@ export const hookProfiles = [
   { name: "@resili/fetch", variants: ["predicate"] },
   { name: "flowshield", variants: ["predicate", "callback"] },
   { name: "ts-retry-circuit", variants: ["predicate"], globalFetch: true },
+  { name: "reqkit", variants: ["predicate", "callback"] },
 ];
 export function hookClient(name: string, fetch: FetchImplementation, variant: string, sentinel: Error): RequestClient {
   let armed = true;
@@ -27,6 +29,18 @@ export function hookClient(name: string, fetch: FetchImplementation, variant: st
   const asyncBomb = async () => bomb();
   const callback = variant.startsWith("async") ? asyncBomb : bomb;
   switch (name) {
+    case "reqkit": {
+      const client = reqkitFetch({
+        fetch,
+        retry: {
+          retries: 2, baseDelayMs: 20, maxDelayMs: 20, factor: 1, jitter: 0,
+          ...(variant === "predicate"
+            ? { shouldRetryResult: () => { throw sentinel; } }
+            : { onRetry: () => { throw sentinel; } }),
+        },
+      });
+      return (input, init) => client(input instanceof URL ? input.toString() : String(input), init ?? {});
+    }
     case "ffetch": return createFfetchClient(fetch, {
       retries: 2, retryDelay: 20,
       ...(variant === "predicate" ? { shouldRetry: bomb } : { hooks: { onRetry: async () => { await callback(); } } }),

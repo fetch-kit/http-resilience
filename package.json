@@ -32,5 +32,8 @@
     "typescript": "7.0.2",
     "vitest": "5.0.3",
     "wretch": "3.0.9"
+  },
+  "dependencies": {
+    "@boy-offi9-inc/reqkit": "file:../reqkit"
   }
 }

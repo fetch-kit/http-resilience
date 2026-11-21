@@ -27,3 +27,17 @@ export const retryAfterAdapters: RetryAdapter[] = [
     return Object.assign((input: RequestInfo | URL, init?: RequestInit) => client(input, init), { dispose: () => client.destroy() });
   } },
 ];
+
+import { createFetch as reqkitCreateFetch } from "@boy-offi9-inc/reqkit";
+retryAfterAdapters.push({
+  name: "reqkit",
+  create(fetch) {
+    const client = reqkitCreateFetch({
+      fetch,
+      retry: { retries: 1, baseDelayMs: 50, maxDelayMs: 50, factor: 1, jitter: 0,
+        respectRetryAfter: true, maxRetryAfterMs: 1_000, retryStatusCodes: [503] },
+      timeout: false,
+    });
+    return (input, init) => client(input instanceof URL ? input.toString() : String(input), init ?? {});
+  },
+});

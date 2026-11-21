@@ -10,6 +10,7 @@ export const libraries = [
   { id: "fetch-resilience", package: "fetch-resilience" },
   { id: "flowshield", package: "flowshield" },
   { id: "ts-retry-circuit", package: "ts-retry-circuit" },
+  { id: "reqkit", package: "@boy-offi9-inc/reqkit" },
 ] as const;
 
 export const scenarios = [
@@ -60,6 +61,7 @@ const httpContracts: Record<LibraryId, string> = {
   "fetch-resilience": "Return the final 503 Response with the original body",
   flowshield: "Exact RetryExhaustedError with attempts and HttpStatusError cause carrying response.status 503; with zero retries, exact underlying HttpStatusError",
   "ts-retry-circuit": "Exact Error constructor and HTTP 503 message from createCircuitFetch",
+  reqkit: "Exact HTTPError; response.status is 503 and the original body is reachable from the response",
 };
 const abortContracts: Record<LibraryId, string> = {
   ffetch: "Exact AbortError",
@@ -73,6 +75,7 @@ const abortContracts: Record<LibraryId, string> = {
   "fetch-resilience": "Exact DOMException, identical caller abort reason",
   flowshield: "Exact DOMException, identical caller abort reason",
   "ts-retry-circuit": "Exact CircuitAbortedError, CIRCUIT_ABORTED",
+  reqkit: "Exact DOMException, identical caller abort reason (RetryAbortedError internal is never surfaced)",
 };
 const timeoutContracts: Partial<Record<LibraryId, string>> = {
   ffetch: "Exact TimeoutError",
@@ -85,6 +88,7 @@ const timeoutContracts: Partial<Record<LibraryId, string>> = {
   "fetch-resilience": "Exact TimeoutError",
   flowshield: "Exact TimeoutError",
   "ts-retry-circuit": "Exact CircuitTimeoutError, CIRCUIT_TIMEOUT, timeoutMs 100",
+  reqkit: "Exact TimeoutError, code ETIMEDOUT",
 };
 function notApplicable(library: LibraryId, scenario: ScenarioId): string | undefined {
   if (scenario === "circuit-local-cancellation" && !["ffetch","resilient-fetch-client","@resili/fetch","fetch-resilience","flowshield","ts-retry-circuit","fetch-smartly"].includes(library)) return "No circuit breaker policy/helper is offered.";
