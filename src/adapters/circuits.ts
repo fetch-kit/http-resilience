@@ -80,8 +80,10 @@ export function circuitAdapter(name: string, threshold = 2, resetMs = 1_000): Re
         });
         return (input: RequestInfo | URL, init?: RequestInit) =>
           breaker.run(async () => {
-            const response = await client(input instanceof URL ? input.toString() : String(input), init ?? {});
-            if (!response.ok) throw new ReqkitHTTPError(response, { url: String(input) });
+            const url = input instanceof Request ? input.url : String(input);
+            const method = input instanceof Request ? input.method : (init?.method ?? "GET");
+            const response = await client(url, init ?? {});
+            if (!response.ok) throw new ReqkitHTTPError(response, { url, method });
             return response;
           });
       }

@@ -26,7 +26,7 @@ export const reqkitAdapter: RetryAdapter = {
     });
     return (input, init) =>
       input instanceof Request
-        ? client(input, init ?? undefined)
+        ? client(input.url, { method: input.method, headers: input.headers, body: input.body ?? undefined, duplex: "half", ...(init as object) } as never)
         : client(input instanceof URL ? input.toString() : String(input), init ?? {});
   },
 };
