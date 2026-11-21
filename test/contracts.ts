@@ -10,6 +10,7 @@ import { RetryExceededError, TimeoutError as ResiliTimeoutError, CircuitOpenErro
 import { TimeoutError as ResilienceTimeoutError } from "fetch-resilience";
 import { RetryExhaustedError, TimeoutError as FlowTimeoutError, CircuitOpenError as FlowCircuitError } from "flowshield";
 import { CircuitAbortedError, CircuitTimeoutError } from "ts-retry-circuit";
+import { HTTPError as ReqkitHTTPError, DeadlineError as ReqkitDeadlineError, TimeoutError as ReqkitTimeoutError } from "@boy-offi9-inc/reqkit";
 import { HttpStatusError } from "../src/adapters/competitors.js";
 import { readBody } from "../src/adapters/types.js";
 import type { ClientResult } from "../src/adapters/types.js";
@@ -39,6 +40,8 @@ export async function expectHttpOutcome(name: string, outcome: Outcome<ClientRes
       break;
     case "ky":
       exact(error, HTTPError); expect((error as HTTPError).response.status).toBe(503); break;
+    case "reqkit":
+      exact(error, ReqkitHTTPError); expect((error as ReqkitHTTPError).response.status).toBe(503); break;
     case "ofetch":
       exact(error, FetchError); expect((error as FetchError).status).toBe(503); break;
     case "wretch":
@@ -110,6 +113,13 @@ export function expectTimeout(name: string, error: unknown, timeoutMs = 100) {
     case "fetch-resilience": exact(error, ResilienceTimeoutError); break;
     case "flowshield": exact(error, FlowTimeoutError); break;
     case "ts-retry-circuit": exact(error, CircuitTimeoutError); expect((error as CircuitTimeoutError).code).toBe("CIRCUIT_TIMEOUT"); expect((error as CircuitTimeoutError).timeoutMs).toBe(100); break;
+    case "reqkit": {
+      // totalDeadlineMs surfaces DeadlineError directly; a per-attempt timeout would be TimeoutError.
+      if (error instanceof ReqkitTimeoutError) { exact(error, ReqkitTimeoutError); break; }
+      exact(error, ReqkitDeadlineError);
+      expect((error as ReqkitDeadlineError).deadlineMs).toBe(100);
+      break;
+    }
     default: throw new Error("Missing timeout contract for " + name);
   }
 }

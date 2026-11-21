@@ -8,6 +8,7 @@ import * as flow from "flowshield";
 import { CircuitBreaker as TsCircuit, createCircuitFetch, CircuitOpenError as TsCircuitOpenError } from "ts-retry-circuit";
 import { CircuitBreaker as SmartCircuit, CircuitOpenError as SmartCircuitOpenError, fetchWithRetry } from "fetch-smartly";
 import { CircuitOpenError as FfetchCircuitOpenError } from "@fetchkit/ffetch";
+import { createCircuitBreaker as reqkitBreaker, CircuitOpenError as ReqkitCircuitOpenError, createFetch as reqkitClient, HTTPError as ReqkitHTTPError } from "@boy-offi9-inc/reqkit";
 import { createFfetchClient } from "./ffetch.js";
 import { HttpStatusError } from "./competitors.js";
 import type { RetryAdapter, RequestClient } from "./types.js";
@@ -20,6 +21,7 @@ export const circuitProfiles = [
   { name: "flowshield", accounting: "logical", probes: "unbounded", abortCounts: true, error: flow.CircuitOpenError },
   { name: "ts-retry-circuit", accounting: "logical", probes: "one", abortCounts: false, error: TsCircuitOpenError },
   { name: "fetch-smartly", accounting: "logical", probes: "one", abortCounts: true, error: SmartCircuitOpenError },
+  { name: "reqkit", accounting: "logical", probes: "one", abortCounts: false, error: ReqkitCircuitOpenError },
 ] as const;
 export function circuitAdapter(name: string, threshold = 2, resetMs = 1_000): RetryAdapter {
   return { name, globalFetch: ["fetch-smartly", "ts-retry-circuit"].includes(name), create(fetch, { retries, delayMs }) {
@@ -68,6 +70,22 @@ export function circuitAdapter(name: string, threshold = 2, resetMs = 1_000): Re
           return retries ? flow.retry({ maxAttempts: retries + 1, delay: delayMs, backoff: "constant",
             ...(init?.signal ? { signal: init.signal } : {}) })(operation) : operation();
         });
+      }
+      case "reqkit": {
+        const breaker = reqkitBreaker({ failureThreshold: threshold, resetTimeoutMs: resetMs, halfOpenMax: 1 });
+        const client = reqkitClient({
+          fetch,
+          retry: { retries, baseDelayMs: delayMs, maxDelayMs: delayMs, factor: 1, jitter: 0, statusCodes: [503] },
+          throwHttpErrors: false,
+        });
+        return (input: RequestInfo | URL, init?: RequestInit) =>
+          breaker.run(async () => {
+            const url = input instanceof Request ? input.url : String(input);
+            const method = input instanceof Request ? input.method : (init?.method ?? "GET");
+            const response = await client(url, init ?? {});
+            if (!response.ok) throw new ReqkitHTTPError(response, { url, method });
+            return response;
+          });
       }
       case "ts-retry-circuit": return createCircuitFetch(new TsCircuit({
         failureThreshold: threshold, cooldownPeriod: resetMs, maxRetries: retries, initialRetryDelay: delayMs,

@@ -6,6 +6,7 @@ import { clientFor, fakeTime, observe, transport } from "../helpers.js";
 import { HttpError as ResilientHttpError } from "resilient-fetch-client";
 import { HttpError as SmartHttpError } from "fetch-smartly";
 import { HttpStatusError } from "../../src/adapters/competitors.js";
+import { HTTPError as ReqkitHTTPError } from "@boy-offi9-inc/reqkit";
 import type { ClientResult } from "../../src/adapters/types.js";
 import type { Outcome } from "../helpers.js";
 import { matrixIt } from "../matrix.js";
@@ -26,11 +27,13 @@ describe.each(circuitProfiles)("$name: half-open concurrency", profile => {
       const constructor = profile.name === "ffetch" ? profile.error
         : profile.name === "resilient-fetch-client" ? ResilientHttpError
         : profile.name === "fetch-smartly" ? SmartHttpError
-        : profile.name === "ts-retry-circuit" ? Error : HttpStatusError;
+        : profile.name === "ts-retry-circuit" ? Error
+        : profile.name === "reqkit" ? ReqkitHTTPError : HttpStatusError;
       expect(error.constructor).toBe(constructor);
       if (error.constructor === ResilientHttpError) expect(((error as ResilientHttpError).details as { status: number }).status).toBe(503);
       if (error.constructor === SmartHttpError) expect((error as SmartHttpError).status).toBe(503);
       if (error.constructor === HttpStatusError) expect((error as HttpStatusError).response.status).toBe(503);
+      if (error.constructor === ReqkitHTTPError) expect((error as ReqkitHTTPError).response.status).toBe(503);
       if (profile.name === "ts-retry-circuit") expect(error.message).toMatch(/^HTTP 503/);
     }
     const label = profile.name + "-circuit-half-open-concurrency";

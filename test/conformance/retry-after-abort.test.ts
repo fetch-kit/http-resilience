@@ -18,7 +18,7 @@ describe.each(retryAfterAdapters)("$name: Retry-After", adapter => {
         const client = await clientFor(adapter, fixture.fetch, { retries: 1, delayMs: 50 });
         const controller = new AbortController();
         const result = observe(client("https://example.test/retry-after", { signal: controller.signal }));
-        const capped = ["ky", "fetch-smartly", "@resili/fetch"].includes(adapter.name);
+        const capped = ["ky", "fetch-smartly", "@resili/fetch", "reqkit"].includes(adapter.name);
         const delay = value === "bad" ? (adapter.name === "ffetch" ? 450 : 50)
           : value === "1000" && !capped ? 1_000_000 : 1_000;
         if (abort) {
